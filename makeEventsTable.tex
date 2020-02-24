@@ -1,0 +1,307 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={tableEvents},
+            pdfauthor={Michel de Lange},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\providecommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{tableEvents}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Michel de Lange}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{18/02/2020}
+
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
+
+\begin{document}
+\maketitle
+
+\begin{table}[t]
+
+\caption{\label{tab:unnamed-chunk-1}Cases and controls}
+\begin{tabular}{l|l|l|l|l|l|l|l|l|l|l|l|l}
+\hline
+\multicolumn{1}{c|}{ } & \multicolumn{4}{c|}{Fathers} & \multicolumn{4}{c|}{Mothers} & \multicolumn{4}{c}{Total} \\
+\cline{2-5} \cline{6-9} \cline{10-13}
+Life event & Y & \% & N & \% & Y & \% & N & \% & Y & \% & N & \%\\
+\hline
+Serious illness or injury & 25 & 0.06 & 378 & 0.94 & 30 & 0.06 & 454 & 0.94 & 55 & 0.06 & 832 & 0.94\\
+\hline
+Serious illness or injury in close relative & 65 & 0.16 & 338 & 0.84 & 106 & 0.22 & 378 & 0.78 & 171 & 0.19 & 716 & 0.81\\
+\hline
+Death of 1st degree relative & 35 & 0.09 & 368 & 0.91 & 43 & 0.09 & 441 & 0.91 & 78 & 0.09 & 809 & 0.91\\
+\hline
+Death in more distant relative & 108 & 0.27 & 295 & 0.73 & 172 & 0.36 & 312 & 0.64 & 280 & 0.32 & 607 & 0.68\\
+\hline
+Marital separation & 14 & 0.03 & 389 & 0.97 & 23 & 0.05 & 461 & 0.95 & 37 & 0.04 & 850 & 0.96\\
+\hline
+Breaking off steady relationship & 11 & 0.03 & 392 & 0.97 & 23 & 0.05 & 461 & 0.95 & 34 & 0.04 & 853 & 0.96\\
+\hline
+Serious problem with close friend, neighbour,.. & 44 & 0.11 & 359 & 0.89 & 99 & 0.2 & 385 & 0.8 & 143 & 0.16 & 744 & 0.84\\
+\hline
+Unemployment for more than 1 month & 59 & 0.15 & 344 & 0.85 & 36 & 0.07 & 448 & 0.93 & 95 & 0.11 & 792 & 0.89\\
+\hline
+Being sacked from your job & 7 & 0.02 & 396 & 0.98 & 3 & 0.01 & 481 & 0.99 & 10 & 0.01 & 877 & 0.99\\
+\hline
+Major financial crisis & 53 & 0.13 & 350 & 0.87 & 80 & 0.17 & 404 & 0.83 & 133 & 0.15 & 754 & 0.85\\
+\hline
+Problems with police or court appearance & 17 & 0.04 & 386 & 0.96 & 10 & 0.02 & 474 & 0.98 & 27 & 0.03 & 860 & 0.97\\
+\hline
+Something valuable lost of stolen & 23 & 0.06 & 380 & 0.94 & 34 & 0.07 & 450 & 0.93 & 57 & 0.06 & 830 & 0.94\\
+\hline
+Change of job, including quitting,.. & 76 & 0.19 & 327 & 0.81 & 70 & 0.14 & 414 & 0.86 & 146 & 0.16 & 741 & 0.84\\
+\hline
+Marriage & 9 & 0.02 & 394 & 0.98 & 9 & 0.02 & 475 & 0.98 & 18 & 0.02 & 869 & 0.98\\
+\hline
+Arrival of a baby & 40 & 0.1 & 363 & 0.9 & 48 & 0.1 & 436 & 0.9 & 88 & 0.1 & 799 & 0.9\\
+\hline
+Someone else moving in or out of your home & 54 & 0.13 & 349 & 0.87 & 78 & 0.16 & 406 & 0.84 & 132 & 0.15 & 755 & 0.85\\
+\hline
+Other major life change & 44 & 0.11 & 359 & 0.89 & 56 & 0.12 & 428 & 0.88 & 100 & 0.11 & 787 & 0.89\\
+\hline
+None of the above & 99 & 0.25 & 304 & 0.75 & 102 & 0.21 & 382 & 0.79 & 201 & 0.23 & 686 & 0.77\\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{printEventsTable}\NormalTok{(}\DataTypeTok{ev=}\NormalTok{events.cases,}\DataTypeTok{caption=}\StringTok{"Cases"}\NormalTok{,descs)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[t]
+
+\caption{\label{tab:unnamed-chunk-2}Cases}
+\begin{tabular}{l|l|l|l|l|l|l|l|l|l|l|l|l}
+\hline
+\multicolumn{1}{c|}{ } & \multicolumn{4}{c|}{Fathers} & \multicolumn{4}{c|}{Mothers} & \multicolumn{4}{c}{Total} \\
+\cline{2-5} \cline{6-9} \cline{10-13}
+Life event & Y & \% & N & \% & Y & \% & N & \% & Y & \% & N & \%\\
+\hline
+Serious illness or injury & 13 & 0.07 & 165 & 0.93 & 14 & 0.06 & 204 & 0.94 & 27 & 0.07 & 369 & 0.93\\
+\hline
+Serious illness or injury in close relative & 33 & 0.19 & 145 & 0.81 & 61 & 0.28 & 157 & 0.72 & 94 & 0.24 & 302 & 0.76\\
+\hline
+Death of 1st degree relative & 16 & 0.09 & 162 & 0.91 & 22 & 0.1 & 196 & 0.9 & 38 & 0.1 & 358 & 0.9\\
+\hline
+Death in more distant relative & 56 & 0.31 & 122 & 0.69 & 81 & 0.37 & 137 & 0.63 & 137 & 0.35 & 259 & 0.65\\
+\hline
+Marital separation & 5 & 0.03 & 173 & 0.97 & 7 & 0.03 & 211 & 0.97 & 12 & 0.03 & 384 & 0.97\\
+\hline
+Breaking off steady relationship & 3 & 0.02 & 175 & 0.98 & 13 & 0.06 & 205 & 0.94 & 16 & 0.04 & 380 & 0.96\\
+\hline
+Serious problem with close friend, neighbour,.. & 26 & 0.15 & 152 & 0.85 & 51 & 0.23 & 167 & 0.77 & 77 & 0.19 & 319 & 0.81\\
+\hline
+Unemployment for more than 1 month & 31 & 0.17 & 147 & 0.83 & 17 & 0.08 & 201 & 0.92 & 48 & 0.12 & 348 & 0.88\\
+\hline
+Being sacked from your job & 3 & 0.02 & 175 & 0.98 & 2 & 0.01 & 216 & 0.99 & 5 & 0.01 & 391 & 0.99\\
+\hline
+Major financial crisis & 29 & 0.16 & 149 & 0.84 & 52 & 0.24 & 166 & 0.76 & 81 & 0.2 & 315 & 0.8\\
+\hline
+Problems with police or court appearance & 9 & 0.05 & 169 & 0.95 & 4 & 0.02 & 214 & 0.98 & 13 & 0.03 & 383 & 0.97\\
+\hline
+Something valuable lost of stolen & 10 & 0.06 & 168 & 0.94 & 16 & 0.07 & 202 & 0.93 & 26 & 0.07 & 370 & 0.93\\
+\hline
+Change of job, including quitting,.. & 36 & 0.2 & 142 & 0.8 & 23 & 0.11 & 195 & 0.89 & 59 & 0.15 & 337 & 0.85\\
+\hline
+Marriage & 5 & 0.03 & 173 & 0.97 & 6 & 0.03 & 212 & 0.97 & 11 & 0.03 & 385 & 0.97\\
+\hline
+Arrival of a baby & 21 & 0.12 & 157 & 0.88 & 25 & 0.11 & 193 & 0.89 & 46 & 0.12 & 350 & 0.88\\
+\hline
+Someone else moving in or out of your home & 27 & 0.15 & 151 & 0.85 & 33 & 0.15 & 185 & 0.85 & 60 & 0.15 & 336 & 0.85\\
+\hline
+Other major life change & 12 & 0.07 & 166 & 0.93 & 21 & 0.1 & 197 & 0.9 & 33 & 0.08 & 363 & 0.92\\
+\hline
+None of the above & 38 & 0.21 & 140 & 0.79 & 46 & 0.21 & 172 & 0.79 & 84 & 0.21 & 312 & 0.79\\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{printEventsTable}\NormalTok{(}\DataTypeTok{ev=}\NormalTok{events.controls,}\DataTypeTok{caption=}\StringTok{"Controls"}\NormalTok{,descs)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[t]
+
+\caption{\label{tab:unnamed-chunk-3}Controls}
+\begin{tabular}{l|l|l|l|l|l|l|l|l|l|l|l|l}
+\hline
+\multicolumn{1}{c|}{ } & \multicolumn{4}{c|}{Fathers} & \multicolumn{4}{c|}{Mothers} & \multicolumn{4}{c}{Total} \\
+\cline{2-5} \cline{6-9} \cline{10-13}
+Life event & Y & \% & N & \% & Y & \% & N & \% & Y & \% & N & \%\\
+\hline
+Serious illness or injury & 12 & 0.05 & 213 & 0.95 & 16 & 0.06 & 250 & 0.94 & 28 & 0.06 & 463 & 0.94\\
+\hline
+Serious illness or injury in close relative & 32 & 0.14 & 193 & 0.86 & 45 & 0.17 & 221 & 0.83 & 77 & 0.16 & 414 & 0.84\\
+\hline
+Death of 1st degree relative & 19 & 0.08 & 206 & 0.92 & 21 & 0.08 & 245 & 0.92 & 40 & 0.08 & 451 & 0.92\\
+\hline
+Death in more distant relative & 52 & 0.23 & 173 & 0.77 & 91 & 0.34 & 175 & 0.66 & 143 & 0.29 & 348 & 0.71\\
+\hline
+Marital separation & 9 & 0.04 & 216 & 0.96 & 16 & 0.06 & 250 & 0.94 & 25 & 0.05 & 466 & 0.95\\
+\hline
+Breaking off steady relationship & 8 & 0.04 & 217 & 0.96 & 10 & 0.04 & 256 & 0.96 & 18 & 0.04 & 473 & 0.96\\
+\hline
+Serious problem with close friend, neighbour,.. & 18 & 0.08 & 207 & 0.92 & 48 & 0.18 & 218 & 0.82 & 66 & 0.13 & 425 & 0.87\\
+\hline
+Unemployment for more than 1 month & 28 & 0.12 & 197 & 0.88 & 19 & 0.07 & 247 & 0.93 & 47 & 0.1 & 444 & 0.9\\
+\hline
+Being sacked from your job & 4 & 0.02 & 221 & 0.98 & 1 & 0 & 265 & 1 & 5 & 0.01 & 486 & 0.99\\
+\hline
+Major financial crisis & 24 & 0.11 & 201 & 0.89 & 28 & 0.11 & 238 & 0.89 & 52 & 0.11 & 439 & 0.89\\
+\hline
+Problems with police or court appearance & 8 & 0.04 & 217 & 0.96 & 6 & 0.02 & 260 & 0.98 & 14 & 0.03 & 477 & 0.97\\
+\hline
+Something valuable lost of stolen & 13 & 0.06 & 212 & 0.94 & 18 & 0.07 & 248 & 0.93 & 31 & 0.06 & 460 & 0.94\\
+\hline
+Change of job, including quitting,.. & 40 & 0.18 & 185 & 0.82 & 47 & 0.18 & 219 & 0.82 & 87 & 0.18 & 404 & 0.82\\
+\hline
+Marriage & 4 & 0.02 & 221 & 0.98 & 3 & 0.01 & 263 & 0.99 & 7 & 0.01 & 484 & 0.99\\
+\hline
+Arrival of a baby & 19 & 0.08 & 206 & 0.92 & 23 & 0.09 & 243 & 0.91 & 42 & 0.09 & 449 & 0.91\\
+\hline
+Someone else moving in or out of your home & 27 & 0.12 & 198 & 0.88 & 45 & 0.17 & 221 & 0.83 & 72 & 0.15 & 419 & 0.85\\
+\hline
+Other major life change & 32 & 0.14 & 193 & 0.86 & 35 & 0.13 & 231 & 0.87 & 67 & 0.14 & 424 & 0.86\\
+\hline
+None of the above & 61 & 0.27 & 164 & 0.73 & 56 & 0.21 & 210 & 0.79 & 117 & 0.24 & 374 & 0.76\\
+\hline
+\end{tabular}
+\end{table}
+
+```
+
+\hypertarget{section}{%
+\section{}\label{section}}
+
+
+\end{document}

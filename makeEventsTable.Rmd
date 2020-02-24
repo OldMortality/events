@@ -1,0 +1,42 @@
+---
+title: "tableEvents"
+author: "Michel de Lange"
+date: "18/02/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r echo=F}
+source('~/Documents/dockerty/countEvents.R')
+library(kableExtra)
+
+printEventsTable <- function(ev,caption,descs) { 
+   
+  events <- cbind(descs,ev)
+  colnames(events) <- c('Life event','Y','%','N','%',
+                                   'Y','%','N','%',
+                                    'Y','%','N','%')
+  rownames(events) <- NULL
+  et <- kable(events,digits=2, caption = caption) %>%
+    kable_styling(full_width = F,bootstrap_options = "striped", position = "left")
+    add_header_above(et, c(" ", "Fathers" = 4, "Mothers" = 4,"Total"=4))
+}
+
+
+events.all <- getAllEventCounts(f=f,m=m)
+events.cases <- getAllEventCounts(f=f.cases,m=m.cases)
+events.controls <- getAllEventCounts(f=f.controls,m=m.controls)
+
+
+printEventsTable(ev=events.all,caption="Cases and controls",descs)
+printEventsTable(ev=events.cases,caption="Cases",descs)
+printEventsTable(ev=events.controls,caption="Controls",descs)
+
+```
+
+# 

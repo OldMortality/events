@@ -1,0 +1,5 @@
+f1 <- read.csv('old/fathmentalh.csv')
+f2 <- read.csv('fathmentalh.csv')
+dim(f1)
+dim(f2)
+setdiff(f2$id,f1$id)
