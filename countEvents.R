@@ -8,6 +8,24 @@ f.extra <- read.csv('fathmentalh.csv',header=T)
 m.extra <- read.csv('mothmentalh.csv',header=T)
 f.extra <- f.extra[,c('id',"fv13_all")]
 m.extra <- m.extra[,c('id',"mv13_all")]
+f$type = "CONTROL"
+f[which(f$id < 2000),'type'] <- "CASE"
+m$type = "CONTROL"
+m[which(m$id < 2000),'type'] <- "CASE"
+table(f$id<2000,f$type)
+table(m$id<2000,m$type)
+f <- merge(f,f.extra[, c("id","fv13_all")], by.x="id",by.y='id')
+m <- merge(m,m.extra[, c("id","mv13_all")], by.x="id",by.y='id')
+f$marital.status <- f$fv13_all
+m$marital.status <- m$mv13_all
+f$married <- F
+f[which(f$marital.status %in% c(1,2)),"married"] <- T
+m$married <- F
+m[which(m$marital.status %in% c(1,2)),"married"] <- T
+f$marital.status <- NULL
+m$marital.status <- NULL
+
+
 dim(f.extra)
 dim(m.extra)
 
@@ -36,9 +54,12 @@ descs <- c( 'Serious illness or injury',
             'Other major life change',
             'None of the above')
 
+# n should range from [1:18]
 num.toColnum<- function(n) {
+  stopifnot(n >= 1)
+  stopifnot(n <= 18)
   result <- n+129 
-  # skip variable 147
+  # skip variable 147 (please specify..)
   if (n==18)  { 
     result <- result + 1 
   }

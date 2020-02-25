@@ -1,186 +1,205 @@
-library(nlme)
-#library(lme4)
-#library(MASS)
+library(lme4)
 # 
 # run countEvents first
 
-table(f$fv13_all)
-table(m$mv13_all)
 
-testDifferenceFatherMother <- function(n, group='ALL',f,m) {
-  
-theFile.f <- f
-theFile.m <- m  
-if (group == 'CASES') {
-  theFile.f <- theFile.f[which(theFile.f$id < 2000),]
-  theFile.m <- theFile.m[which(theFile.m$id < 2000),]
-}
-if (group == 'CONTROLS') {
-  theFile.f <- theFile.f[which(theFile.f$id >= 2000),]
-  theFile.m <- theFile.m[which(theFile.m$id >= 2000),]
-}
-
-dim(theFile.f)
-dim(theFile.m)
-
-descs[n]
-colname.f <- paste('fv',num.toColnum(n),sep='')
-colname.m <- paste('mv',num.toColnum(n),sep='')
-
-head(theFile.f[,colname.f])
-head(theFile.m[,colname.m])
-resp.f <- theFile.f[,c('id',colname.f)]
-resp.m <- theFile.m[,c('id',colname.m)]
-resp.f[which(is.na(resp.f[,colname.f])),colname.f] <- 0
-resp.m[which(is.na(resp.m[,colname.m])),colname.m] <- 0
-table(resp.f[,colname.f])
-table(resp.m[,colname.m])
-# number of children (unique id's)
-children <- unique(c(resp.f$id,resp.m$id))
-length(children)
-# subtract the 2nd set from the first
-#     response of father, not of mother
-f.not.m <- setdiff(resp.f$id,resp.m$id)
-length(f.not.m)
-#     response of mother, not of father
-m.not.f <- setdiff(resp.m$id,resp.f$id)
-length(m.not.f)
-# id's of children for whom we have both responses
-m.and.f <- setdiff(setdiff(children,f.not.m),m.not.f)
-length(m.and.f)
-
-# response of father, where we also have the mother
-f.both <- resp.f[which(resp.f$id %in% m.and.f),]
-m.both <- resp.m[which(resp.m$id %in% m.and.f),]
-dim(f.both)
-dim(m.both)
-both <- merge(f.both,m.both,by='id')
-head(both)
-dim(both)
-t.both <-table(both[,colname.f],both[,colname.m])
-
-both.test <- mcnemar.test(t.both)
-both.p <- both.test$p.value
-
-# m <- matrix(c(44,99,359,385),nrow=2)
-# mcnemar.test(m)
-
-f.singles <- resp.f[-which(resp.f$id %in% m.and.f),]
-colnames(f.singles) <- c('id','response')
-f.singles$parent <- 'father'
-dim(f.singles)
-
-m.singles <- resp.m[-which(resp.m$id %in% m.and.f),]
-colnames(m.singles) <- c('id','response')
-m.singles$parent <- 'mother'
-dim(m.singles)
-head(f.singles)
-head(m.singles)
-singles <- rbind(f.singles,m.singles)
-head(singles)
-singles.table <- table(singles$response,singles$parent)
-singles.test <- fisher.test(singles.table,simulate.p.value = F)
-#singles.test <- chisq.test(singles.table,simulate.p.value = T)
-singles.p <- singles.test$p.value
-
-
-# 
-# Here is some stuff to work out marital status in the 3 
-# groups (m.and.f, f.not.m m.not.f)
-marital.fm <- f.extra[which(f.extra$id %in% m.and.f),]
-marital.fm2<- m.extra[which(m.extra$id %in% m.and.f),]
-
-marital.f <-  f.extra[which(f.extra$id %in% f.not.m),]
-marital.m <-  m.extra[which(m.extra$id %in% m.not.f),]
-
-table(marital.fm$fv13_all)
-table(marital.fm2$mv13_all)
-
-
-table(marital.f$fv13_all)
-table(marital.m$mv13_all)
-
-#
-mm <- matrix(c(348,0,29,1,15,3,5,2,47,8,32,19),nrow=4)
-# all
-mm <- matrix(c(348,30,62,69),nrow=2)
-# cases
-mm <- matrix(c(154,11,30,28),nrow=2)
-mm
-fisher.test(mm)
-sum(mm)
-
-
-if (group == 'ALL') {
-
-resp.f$parent <- 'father'
-colnames(resp.f) <- c('id','response','parent')
-
-resp.m$parent <- 'mother'
-colnames(resp.m) <- c('id','response','parent')
-
-resp.f2 <- resp.f
-resp.m2 <- resp.m
-
-colnames(resp.f2)
-colnames(resp.m2)
-all.resp <- rbind(resp.f2,resp.m2)
-all.resp$class <- "healthy"
-all.resp[which(all.resp$id < 2000),"class"] <- "disease"
-head(all.resp)
-all.resp$class <- factor(all.resp$class)
-all.resp$class <- relevel(all.resp$class,ref='healthy')
-
-all.resp$marital.status <- F
-all.resp$c_ses <- NA
-for (i in 1:dim(all.resp)[1]){
-  id <- all.resp$id[i]
-  if (all.resp$parent[i] == "father") {
-    marital.status <- f.extra[which(f.extra$id==id),"fv13_all"]
-    c_ces <- f[which(f$id==id),"c_ces"]
-  } else {
-    marital.status <- m.extra[which(m.extra$id==id),"mv13_all"]
-    c_ces <- m[which(m$id==id),"c_ces"]
+# subsets the file to CASES, CONTROLS
+getGroup <- function(theFile,group) {
+  result <- NULL
+  if (group == 'CASES') {
+    result <- theFile[which(theFile$id < 2000),] 
   }
-  all.resp$marital.status[i] <- marital.status
-  all.resp$c_ces[i] <- c_ces
+  if (group == 'CONTROLS') {
+    result <- theFile[which(theFile$id >= 2000),]
+  }
+  return(result)
 }
-table(all.resp$marital.status)
-table(all.resp$c_ces)
-all.resp$married <- F
-all.resp[which(all.resp$marital.status %in% c(1,2)),"married"] <- T
 
 
+# computes sum of answers to survey questions, and 
+#  puts those in a column q.sum
+addTotalColumn <- function(fi,parent) {
+  
+  stopifnot(parent %in% c('mother','father'))
+  if (parent=='mother') {
+    prefix <- 'mv'
+  } else {
+    prefix <- 'fv'
+  }
+  
+  colnums <- paste0(prefix,130)
+  for (i in 2:18) {
+    colnums <- c(colnums,paste0(prefix,num.toColnum(i)))
+  }
+  fi$q.sum <- apply(fi[,colnums],1,sum,na.rm=T)
+  return(fi)
+}
 
-model1 <- glmer(response ~  class * parent + (1|id),data=all.resp,
+
+f <- addTotalColumn(f,parent='father')
+m <- addTotalColumn(m,parent='mother')
+
+# get answers for a given question
+getDataByQuestion <- function(n,f,m) {
+  colname.f <- paste('fv', num.toColnum(n), sep='')
+  colname.m <- paste('mv',num.toColnum(n),sep='')
+  resp.f <- f[,c('id',colname.f,'type','c_ses','married')]
+  resp.m <- m[,c('id',colname.m,'type','c_ses','married')]
+  
+  # set NA to 0 for response
+  resp.f[which(is.na(resp.f[,colname.f])),colname.f] <- 0
+  resp.m[which(is.na(resp.m[,colname.m])),colname.m] <- 0 
+  
+  cols <- c('id','response','type','c_ses','married','parent')
+  resp.f$parent <- 'father'
+  colnames(resp.f) <- cols
+  resp.m$parent <- 'mother'
+  colnames(resp.m) <- cols
+  all.resp <- rbind(resp.f,resp.m)
+  # all.resp$class <- "healthy"
+  # all.resp[which(all.resp$id < 2000),"class"] <- "disease"
+  # all.resp$class <- factor(all.resp$class)
+  # all.resp$class <- relevel(all.resp$class,ref='healthy')
+  # group marital status into two groups
+  return(all.resp)
+}
+
+
+  
+testDifferenceFatherMother <- function(all.resp) { 
+
+  all.resp$c_ses <- factor(all.resp$c_ses)
+  model1 <- glmer(response ~   c_ses + class * parent + (1|id),data=all.resp,
              family='binomial')
-model2 <- glmer(response ~  class * parent + (1|id),data=all.resp,
+  # model2 <- glmer(response ~  class * parent + (1|id),data=all.resp,
+  #               family='binomial')
+  # a <- anova(model2,model1,test='Chisq')
+  summary(model1)
+
+  
+  return(model1)
+
+}
+dim(m)
+
+testByQuestion <- function(n,f,m) {
+  q1 <- getDataByQuestion(n,f,m)
+  q1$c_ses <- paste0('DEP',all.q$c_ses)
+  q1$type <- factor(all.q$type,ordered=F)
+  q1$type <- relevel(all.q$type,ref='CONTROL')
+  model1 <- glmer(cbind(q1$response) ~  c_ses + parent +  type + (1|id)  ,
+                  data=q1,
                 family='binomial')
-a <- anova(model2,model1,test='Chisq')
+  return(summary(model1))
+}
+
+testByQuestion(4,f,m) 
+
+for (i in 1:18) {
+  print(paste('==========',i,'==============='))
+  
+  print(testByQuestion(i,f,m) )
+}
+  
+
+
+getDataAllQuestions <- function(f,m) {
+  
+  colnames <- c('id','q.sum','type','c_ses','married')
+  fathers <- f[,colnames]
+  fathers$parent <- 'father'
+  mothers <- m[,colnames]
+  mothers$parent <- 'mother'
+  return(rbind(fathers,mothers))  
+  
+}
+
+
+mean(getDataAllQuestions(f[which(f$type=='CASE'),],
+                         m[which(m$type=='CASE'),])$q.sum)
+sqrt(var(getDataAllQuestions(f[which(f$type=='CASE'),],
+                         m[which(m$type=='CASE'),])$q.sum))
+
+mean(getDataAllQuestions(f[which(f$type=='CONTROL'),],
+                         m[which(m$type=='CONTROL'),])$q.sum)
+sqrt(var(getDataAllQuestions(f[which(f$type=='CONTROL'),],
+                         m[which(m$type=='CONTROL'),])$q.sum))
+
+mean(getDataAllQuestions(f,m)$q.sum)
+sqrt(var(getDataAllQuestions(f,m)$q.sum))
+
+mean(all.q$q.sum)
+
+all.q <- getDataAllQuestions(f=f,m=m)
+all.q$c_ses <- paste0('DEP',all.q$c_ses)
+colnames(all.q)
+dim(all.q)
+all.q$type
+
+all.q$type <- factor(all.q$type,ordered=F)
+all.q$type <- relevel(all.q$type,ref='CONTROL')
+model1 <- glmer(cbind(q.sum,18-q.sum) ~   c_ses + type + parent + (1|id),data=all.q,
+                family='binomial')
+summary(model1)
+model2 <- glmer(cbind(q.sum,18-q.sum) ~   c_ses + (1|id),data=all.q,
+                family='binomial')
+exp(0.05)
+
+summary(model1)
+confint(model1)
+plot(model1)
+r <- residuals(model1,scale=T)
+plot(qqnorm(r))
+r <- residuals(model1,type='pearson')
+sqrt(mean(r^2))
+
+abline(0,1,col='red')
+summary(model1) 
+anova(model1,model2,test='Chisq')
+ 
 summary(model1)
 
-} else {
-  model <- NULL
-}
+ci <- exp(confint(model1))
+s <- summary(model1)
+round(exp(s$coefficients),2)
+round(ci,2)
 
-return(list(both.p,singles.p,model=model))
+dim(all.q)
+colnames(all.q)
 
-}
+all.resp <- getData(n=4,f,m)
+d1 <- testDifferenceFatherMother(theData)
 
-groups <- c("ALL","CASES","CONTROLS")
 
-d1 <- testDifferenceFatherMother(n=4,group='ALL',f=f,m=m)
+
 d1$model
 mod <- d1$model
 summary(mod)
 
+f <- addTotalColumn(f,parent='father')
+m <- addTotalColumn(m,parent='mother')
+
+f.cases <- getGroup(f,'CASES')
+f.controls <- getGroup(f,'CONTROLS')
+m.cases <- getGroup(m,'CASES')
+m.controls <- getGroup(m,'CONTROLS')
+round(prop.table(table(f.cases$q.sum)),2)
+round(prop.table(table(m.cases$q.sum)),2)
+round(prop.table(table(f.controls$q.sum)),2)
+round(prop.table(table(m.controls$q.sum)),2)
 
 
+round(prop.table(table(f$q.sum)),2)
+round(prop.table(table(m$q.sum)),2)
 
-
-for (n in 1:18) {
-  print(n)
-  ps <- testDifferenceFatherMother(n)
-  print(ps)
+library(effects)
+invlogit<- function(x) {
+  return(1/(1+exp(-x)))
 }
 
+
+e <- allEffects(model1,confint=T)
+plot(e)
+
+round(invlogit(cbind(e$c_ses$fit,e$c_ses$lower,e$c_ses$upper)),2)
+round(invlogit(cbind(e$type$fit,e$type$lower,e$type$upper)),2)
