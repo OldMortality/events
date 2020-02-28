@@ -138,6 +138,8 @@ all.q$type
 
 all.q$type <- factor(all.q$type,ordered=F)
 all.q$type <- relevel(all.q$type,ref='CONTROL')
+# make it a factor
+all.q$id <- paste0('id',all.q$id)
 model1 <- glmer(cbind(q.sum,18-q.sum) ~   c_ses + type + parent + (1|id),data=all.q,
                 family='binomial')
 summary(model1)
@@ -203,3 +205,6 @@ plot(e)
 
 round(invlogit(cbind(e$c_ses$fit,e$c_ses$lower,e$c_ses$upper)),2)
 round(invlogit(cbind(e$type$fit,e$type$lower,e$type$upper)),2)
+
+x <- getDataByQuestion(5,f,m)
+colnames(f)
